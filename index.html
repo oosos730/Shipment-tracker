@@ -1,0 +1,1006 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Shipment Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #7c3aed;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Section */
+        .header {
+            background: #7c3aed;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo-icon svg {
+            width: 30px;
+            height: 30px;
+            color: #7c3aed;
+        }
+
+        .app-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .add-btn {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7c3aed;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: 300;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Stats Grid */
+        .stats-container {
+            background: #7c3aed;
+            padding: 0 20px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.purple { background: #f3e8ff; color: #7c3aed; }
+        .stat-icon.orange { background: #ffedd5; color: #f97316; }
+        .stat-icon.green { background: #dcfce7; color: #22c55e; }
+        .stat-icon.teal { background: #ccfbf1; color: #14b8a6; }
+
+        .stat-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .stat-info h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .stat-info p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: #7c3aed;
+            padding: 0 20px 20px;
+        }
+
+        .search-box {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .search-box svg {
+            width: 20px;
+            height: 20px;
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 1rem;
+            color: #374151;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Filter Row */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .filter-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .filter-dropdown {
+            flex: 1;
+            background: rgba(255,255,255,0.95);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .filter-dropdown span {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .filter-dropdown svg {
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
+        }
+
+        /* Date Range */
+        .date-range {
+            background: #7c3aed;
+            padding: 0 20px 20px;
+        }
+
+        .date-range-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .date-range-card svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .date-range-card span {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Entries Count */
+        .entries-count {
+            background: #7c3aed;
+            padding: 0 20px 15px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Entries List */
+        .entries-container {
+            background: #7c3aed;
+            padding: 0 20px 100px;
+        }
+
+        .entry-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .entry-title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .entry-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #7c3aed;
+            flex-shrink: 0;
+        }
+
+        .entry-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .status-badge.not-sent {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .status-badge.sent {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .bl-number {
+            display: inline-block;
+            background: #f3e8ff;
+            color: #7c3aed;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-left: 34px;
+            margin-bottom: 15px;
+        }
+
+        .entry-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-left: 34px;
+        }
+
+        .detail-box {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-height: 90vh;
+            border-radius: 24px 24px 0 0;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+
+        .modal-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #7c3aed;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* ============================================
+           MOBILE FIXES - Smaller Icons & Checkboxes
+           ============================================ */
+
+        @media (max-width: 480px) {
+            /* Header icons smaller */
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+
+            .icon-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .add-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                border-radius: 10px;
+            }
+
+            /* Logo slightly smaller */
+            .logo-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .logo-icon svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .app-title {
+                font-size: 1.25rem;
+            }
+
+            /* Checkboxes smaller */
+            .entry-checkbox {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Adjust spacing for smaller checkbox */
+            .bl-number,
+            .entry-details {
+                margin-left: 30px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .header-actions {
+                gap: 6px;
+            }
+
+            .icon-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .add-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .entry-checkbox {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </div>
+            <div class="app-title">Shipment<br>Tracker</div>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="showStats()" title="Statistics">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" onclick="importData()" title="Import">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" onclick="exportData()" title="Export">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" onclick="showTemplates()" title="Templates">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </button>
+            <button class="add-btn" onclick="openModal()" title="Add New">+</button>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalEntries">0</h3>
+                    <p>Total Entries</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 id="notSent">0</h3>
+                    <p>Not Sent</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 id="sent">0</h3>
+                    <p>Sent</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon teal">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalQty">0</h3>
+                    <p>Total QTY</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-box">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search by store, BL, or box..." onkeyup="searchEntries()">
+        </div>
+        <div class="filter-row">
+            <div class="filter-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                </svg>
+            </div>
+            <div class="filter-dropdown" onclick="toggleFilter()">
+                <span>All Status</span>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Range -->
+    <div class="date-range">
+        <div class="date-range-card" onclick="openDateFilter()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span>Date Range Filter</span>
+        </div>
+    </div>
+
+    <!-- Entries Count -->
+    <div class="entries-count" id="entriesCount">Showing 0 of 0 entries</div>
+
+    <!-- Entries List -->
+    <div class="entries-container" id="entriesContainer">
+        <div class="empty-state" id="emptyState">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+            <h3>No Entries Found</h3>
+            <p>Add your first shipment entry to get started.</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="entryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Shipment Entry</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="entryForm" onsubmit="saveEntry(event)">
+                    <div class="form-group">
+                        <label>Store/Recipient Name</label>
+                        <input type="text" id="storeName" required placeholder="e.g., MADINA DZ">
+                    </div>
+                    <div class="form-group">
+                        <label>BL Number</label>
+                        <input type="text" id="blNumber" required placeholder="e.g., 1130">
+                    </div>
+                    <div class="form-group">
+                        <label>Box Number</label>
+                        <input type="text" id="boxNumber" required placeholder="e.g., 08">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="quantity" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="status" required>
+                            <option value="not_sent">Not Sent</option>
+                            <option value="sent">Sent</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let entries = JSON.parse(localStorage.getItem('shipments')) || [];
+        let nextId = parseInt(localStorage.getItem('nextId')) || 1;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderEntries();
+            updateStats();
+        });
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('entryModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('entryModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('entryForm').reset();
+        }
+
+        // Close modal on outside click
+        document.getElementById('entryModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Save entry
+        function saveEntry(e) {
+            e.preventDefault();
+            
+            const entry = {
+                id: nextId++,
+                storeName: document.getElementById('storeName').value.toUpperCase(),
+                blNumber: document.getElementById('blNumber').value,
+                boxNumber: document.getElementById('boxNumber').value,
+                quantity: parseInt(document.getElementById('quantity').value),
+                status: document.getElementById('status').value,
+                dateAdded: new Date().toISOString().split('T')[0],
+                dateSent: document.getElementById('status').value === 'sent' ? new Date().toISOString().split('T')[0] : '-'
+            };
+
+            entries.unshift(entry);
+            saveToStorage();
+            renderEntries();
+            updateStats();
+            closeModal();
+        }
+
+        // Render entries
+        function renderEntries(filtered = entries) {
+            const container = document.getElementById('entriesContainer');
+            const emptyState = document.getElementById('emptyState');
+            const countEl = document.getElementById('entriesCount');
+            
+            countEl.textContent = `Showing ${filtered.length} of ${entries.length} entries`;
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                container.appendChild(emptyState);
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            // Remove empty state and render cards
+            const existingEmpty = container.querySelector('.empty-state');
+            if (existingEmpty) existingEmpty.remove();
+            
+            // Clear current entries (keep empty state hidden)
+            const currentCards = container.querySelectorAll('.entry-card');
+            currentCards.forEach(c => c.remove());
+
+            filtered.forEach(entry => {
+                const card = createEntryCard(entry);
+                container.appendChild(card);
+            });
+        }
+
+        function createEntryCard(entry) {
+            const div = document.createElement('div');
+            div.className = 'entry-card';
+            div.innerHTML = `
+                <div class="entry-header">
+                    <div class="entry-title-section">
+                        <input type="checkbox" class="entry-checkbox" data-id="${entry.id}">
+                        <span class="entry-title">${entry.storeName}</span>
+                    </div>
+                    <div class="status-badge ${entry.status}">
+                        <span class="status-dot"></span>
+                        ${entry.status === 'not_sent' ? 'Not Sent' : 'Sent'}
+                    </div>
+                </div>
+                <div class="bl-number">BL# ${entry.blNumber}</div>
+                <div class="entry-details">
+                    <div class="detail-box">
+                        <div class="detail-label">Box</div>
+                        <div class="detail-value">${entry.boxNumber}</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label">QTY</div>
+                        <div class="detail-value">${entry.quantity}</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label">Date Added</div>
+                        <div class="detail-value">${entry.dateAdded}</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label">Date Sent</div>
+                        <div class="detail-value">${entry.dateSent}</div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalEntries').textContent = entries.length;
+            document.getElementById('notSent').textContent = entries.filter(e => e.status === 'not_sent').length;
+            document.getElementById('sent').textContent = entries.filter(e => e.status === 'sent').length;
+            document.getElementById('totalQty').textContent = entries.reduce((sum, e) => sum + e.quantity, 0);
+        }
+
+        // Search functionality
+        function searchEntries() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = entries.filter(e => 
+                e.storeName.toLowerCase().includes(term) ||
+                e.blNumber.includes(term) ||
+                e.boxNumber.includes(term)
+            );
+            renderEntries(filtered);
+        }
+
+        // Filter toggle
+        function toggleFilter() {
+            const statuses = ['All Status', 'Not Sent', 'Sent'];
+            const current = document.querySelector('.filter-dropdown span').textContent;
+            const next = statuses[(statuses.indexOf(current) + 1) % statuses.length];
+            document.querySelector('.filter-dropdown span').textContent = next;
+            
+            if (next === 'All Status') {
+                renderEntries(entries);
+            } else {
+                const filtered = entries.filter(e => 
+                    next === 'Not Sent' ? e.status === 'not_sent' : e.status === 'sent'
+                );
+                renderEntries(filtered);
+            }
+        }
+
+        // Export data
+        function exportData() {
+            if (entries.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            const dataStr = JSON.stringify(entries, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `shipments_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        // Import data
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        if (Array.isArray(imported)) {
+                            entries = imported;
+                            nextId = Math.max(...entries.map(e => e.id), 0) + 1;
+                            saveToStorage();
+                            renderEntries();
+                            updateStats();
+                            alert('Data imported successfully!');
+                        }
+                    } catch (err) {
+                        alert('Error importing file!');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Placeholder functions
+        function showStats() {
+            alert('Statistics view coming soon!');
+        }
+
+        function showTemplates() {
+            alert('Templates coming soon!');
+        }
+
+        function openDateFilter() {
+            alert('Date range filter coming soon!');
+        }
+
+        // Save to localStorage
+        function saveToStorage() {
+            localStorage.setItem('shipments', JSON.stringify(entries));
+            localStorage.setItem('nextId', nextId);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
